@@ -1,0 +1,555 @@
+
+<h2 class="sr-only">Üreğen Mimarlık — Müşteri Finans Dashboard</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body,div,span,input,select,button,table,th,td{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.app{background:#F0F2F5;min-height:100vh;padding:0 0 24px;border-radius:12px;overflow:hidden}
+
+/* === ANTET === */
+.antet{background:#1A2332;padding:0;position:relative;overflow:hidden}
+.antet-inner{display:flex;align-items:stretch;justify-content:space-between;min-height:90px}
+.antet-accent{width:6px;background:linear-gradient(180deg,#C9A84C 0%,#E8C97A 50%,#C9A84C 100%);flex-shrink:0}
+.antet-left{display:flex;align-items:center;gap:18px;padding:20px 24px;flex:1}
+.antet-logo{width:54px;height:54px;background:#C9A84C;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.antet-logo svg{width:32px;height:32px}
+.antet-text h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.2px;line-height:1.1}
+.antet-text p{font-size:12px;color:#C9A84C;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+.antet-text small{font-size:11px;color:#8899AA;margin-top:2px;display:block}
+.antet-right{display:flex;align-items:center;gap:0;padding:0 24px;border-left:1px solid rgba(255,255,255,.08)}
+.antet-stat{text-align:center;padding:0 18px;border-right:1px solid rgba(255,255,255,.08)}
+.antet-stat:last-child{border-right:none}
+.antet-stat-val{font-size:18px;font-weight:700;color:#fff;line-height:1}
+.antet-stat-lbl{font-size:10px;color:#8899AA;text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+.antet-bottom{background:#141C28;padding:8px 30px;display:flex;align-items:center;gap:24px;font-size:11px;color:#8899AA}
+.antet-bottom span{display:flex;align-items:center;gap:5px}
+.antet-bottom .dot{width:4px;height:4px;border-radius:50%;background:#C9A84C}
+
+/* === SAYFA GÖVDE === */
+.body{padding:20px 20px 0}
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.hdr-sub{font-size:12px;color:#6B7A8D;margin-top:3px}
+.hdr-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* === BUTONLAR === */
+.btn{border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;font-weight:500;border:none;transition:opacity .15s,transform .1s}
+.btn:active{transform:scale(0.97)}
+.btn-ghost{background:#fff;color:#374151;border:1px solid #D1D9E0}
+.btn-ghost:hover{background:#F7F9FB}
+.btn-primary{background:#1A2332;color:#fff;border:1px solid #1A2332}
+.btn-primary:hover{background:#2D3F55}
+.btn-primary svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.5;vertical-align:middle;margin-right:4px}
+.btn-gold{background:#C9A84C;color:#1A2332;border:none;font-weight:700}
+.btn-gold:hover{background:#B8943A}
+.btn-gold svg{width:14px;height:14px;fill:none;stroke:#1A2332;stroke-width:2.5;vertical-align:middle;margin-right:4px}
+.btn-danger{background:#FEF2F2;color:#991B1B;border:1px solid #FECACA}
+.btn-danger:hover{background:#FEE2E2}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-kur{background:#EEF2FF;color:#3730A3;border:1px solid #C7D2FE}
+.btn-kur:hover{background:#E0E7FF}
+
+/* === KUR BAR === */
+.kur-bar{display:flex;align-items:center;gap:20px;padding:10px 16px;background:#fff;border-radius:10px;border:1px solid #E5EAF0;margin-bottom:16px;flex-wrap:wrap;font-size:13px;color:#6B7A8D}
+.kur-val{font-weight:700;color:#1A2332;margin-left:4px}
+
+/* === METRİKLER === */
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.metric{border-radius:12px;padding:16px 18px}
+.metric-toplam{background:#1A2332;color:#fff}
+.metric-tahsil{background:#0F6E56;color:#fff}
+.metric-kalan{background:#fff;border:1px solid #E5EAF0}
+.metric-tamam{background:#FBF5E6;border:1px solid #E8D9A0}
+.mlabel{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.7;margin-bottom:7px}
+.metric-toplam .mlabel,.metric-tahsil .mlabel{color:#fff;opacity:.65}
+.metric-kalan .mlabel{color:#6B7A8D}
+.metric-tamam .mlabel{color:#8A6E1A}
+.mval{font-size:20px;font-weight:700;line-height:1.1}
+.metric-toplam .mval,.metric-tahsil .mval{color:#fff}
+.metric-kalan .mval{color:#1A2332}
+.metric-tamam .mval{color:#6B4F10}
+.msub{font-size:11px;margin-top:5px}
+.metric-toplam .msub,.metric-tahsil .msub{color:rgba(255,255,255,.55)}
+.metric-kalan .msub{color:#9CA3AF}
+.metric-tamam .msub{color:#B8943A}
+.mbar{height:4px;border-radius:2px;margin-top:10px;overflow:hidden}
+.mfill{height:100%;border-radius:2px}
+
+/* === GRAFİKLER === */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.ccard{background:#fff;border:1px solid #E5EAF0;border-radius:12px;padding:18px}
+.ctitle{font-size:13px;font-weight:600;color:#374151;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:7px}
+.ctitle-dot{width:8px;height:8px;border-radius:2px;background:#C9A84C;flex-shrink:0}
+
+/* === TABLO === */
+.tcard{background:#fff;border:1px solid #E5EAF0;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.tcard-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #F3F4F6;background:#FAFBFC}
+.tcard-hdr h3{font-size:14px;font-weight:600;color:#1A2332;display:flex;align-items:center;gap:8px}
+.tcard-hdr h3::before{content:'';width:3px;height:16px;background:#C9A84C;border-radius:2px;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+th{padding:9px 14px;text-align:left;color:#6B7A8D;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;background:#FAFBFC;border-bottom:1px solid #F3F4F6}
+td{padding:11px 14px;border-bottom:1px solid #F8F9FA;color:#1A2332;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr.trow:hover td{background:#FFFDF5;cursor:pointer}
+tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.bg{background:#D1FAE5;color:#065F46}
+.ba{background:#FEF3C7;color:#92400E}
+.bb{background:#DBEAFE;color:#1E40AF}
+.bk{background:#F3F4F6;color:#4B5563}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.pb{height:5px;background:#E5EAF0;border-radius:3px;overflow:hidden;margin-top:3px}
+.pf{height:100%;border-radius:3px}
+.avtr{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+
+/* === YENİ MÜŞTERİ PANELİ === */
+.panel-new{display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:14px;margin-bottom:16px}
+.panel-new.open{display:block}
+.panel-new .phead{background:#DCFCE7;border-bottom:1px solid #BBF7D0;padding:15px 20px;border-radius:14px 14px 0 0;display:flex;align-items:center;justify-content:space-between}
+.panel-new .phead h2{font-size:15px;font-weight:600;color:#14532D}
+.panel-new .pbody{padding:20px;background:#F0FDF4}
+.panel-new .pfoot{padding:13px 20px;border-top:1px solid #BBF7D0;background:#F0FDF4;display:flex;gap:8px;justify-content:flex-end;border-radius:0 0 14px 14px}
+.panel-new .fg input,.panel-new .fg select{background:#fff;border:1px solid #BBF7D0;border-radius:8px;padding:9px 11px;width:100%;color:#1A2332;font-size:13px}
+.panel-new .fg input:focus,.panel-new .fg select:focus{outline:none;border-color:#16A34A;box-shadow:0 0 0 3px #DCFCE7}
+.panel-new .fg label{font-size:12px;font-weight:600;color:#166534;margin-bottom:4px;display:block}
+
+/* === KUR PANELİ === */
+.panel-kur{display:none;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:14px;margin-bottom:16px}
+.panel-kur.open{display:block}
+.panel-kur .phead{background:#E0E7FF;border-bottom:1px solid #C7D2FE;padding:15px 20px;border-radius:14px 14px 0 0;display:flex;align-items:center;justify-content:space-between}
+.panel-kur .phead h2{font-size:15px;font-weight:600;color:#1E1B4B}
+.panel-kur .pbody{padding:20px;background:#EEF2FF}
+.panel-kur .pfoot{padding:13px 20px;border-top:1px solid #C7D2FE;background:#EEF2FF;display:flex;gap:8px;justify-content:flex-end;border-radius:0 0 14px 14px}
+.panel-kur .fg input{background:#fff;border:1px solid #C7D2FE;border-radius:8px;padding:9px 11px;width:100%;color:#1A2332;font-size:13px}
+.panel-kur .fg input:focus{outline:none;border-color:#4F46E5;box-shadow:0 0 0 3px #E0E7FF}
+.panel-kur .fg label{font-size:12px;font-weight:600;color:#312E81;margin-bottom:4px;display:block}
+
+/* === DETAY PANELİ === */
+.panel-det{display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:14px;margin-bottom:16px}
+.panel-det.open{display:block}
+.panel-det .phead{background:#FEF3C7;border-bottom:1px solid #FDE68A;padding:15px 20px;border-radius:14px 14px 0 0;display:flex;align-items:center;justify-content:space-between}
+.panel-det .phead-inner{display:flex;align-items:center;gap:10px}
+.panel-det .phead h2{font-size:15px;font-weight:600;color:#78350F}
+.panel-det .pbody{padding:20px;background:#FFFBEB}
+.panel-det .pfoot{padding:13px 20px;border-top:1px solid #FDE68A;background:#FFFBEB;display:flex;gap:8px;justify-content:space-between;align-items:center;border-radius:0 0 14px 14px}
+.panel-det .fg input,.panel-det .fg select{background:#fff;border:1px solid #FDE68A;border-radius:8px;padding:9px 11px;width:100%;color:#1A2332;font-size:13px}
+.panel-det .fg input:focus{outline:none;border-color:#D97706;box-shadow:0 0 0 3px #FEF3C7}
+.panel-det .fg label{font-size:12px;font-weight:600;color:#92400E;margin-bottom:4px;display:block}
+
+/* === ORTAK FORM === */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.fg{display:flex;flex-direction:column}
+.fg input.err{border-color:#EF4444!important;box-shadow:0 0 0 3px #FEE2E2!important}
+.f-err{font-size:12px;color:#991B1B;margin-top:6px;display:none}
+
+/* === DETAY İÇERİK === */
+.psec{background:#FEF9E7;border:1px solid #FDE68A;border-radius:10px;padding:14px;margin-bottom:16px}
+.bpbar{height:10px;background:#FDE68A;border-radius:5px;overflow:hidden}
+.bpfill{height:100%;border-radius:5px;transition:width .4s}
+.infogrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.info-box{background:#fff;border:1px solid #FDE68A;border-radius:8px;padding:10px 12px}
+.info-box label{font-size:11px;font-weight:600;color:#92400E;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px}
+.info-box span{font-size:13px;font-weight:600;color:#1A2332}
+.ptable{width:100%;border-collapse:collapse;font-size:12px;border-radius:8px;overflow:hidden;border:1px solid #FDE68A}
+.ptable th{padding:7px 12px;font-size:11px;font-weight:600;color:#78350F;background:#FEF3C7;border-bottom:1px solid #FDE68A;text-align:left}
+.ptable td{padding:8px 12px;border-bottom:1px solid #FEF3C7;color:#1A2332;background:#fff}
+.ptable tr:last-child td{border-bottom:none}
+.delbtn{background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:13px;padding:2px 5px;border-radius:4px}
+.delbtn:hover{color:#EF4444;background:#FEE2E2}
+.addrow{display:grid;grid-template-columns:2fr 1.5fr 1.5fr auto;gap:8px;align-items:end;margin-top:10px}
+.sec-title{font-size:12px;font-weight:600;color:#92400E;text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px;padding-top:14px;border-top:1px dashed #FDE68A}
+</style>
+
+<div class="app" id="app">
+
+  <!-- ANTET -->
+  <div class="antet">
+    <div class="antet-inner">
+      <div class="antet-accent"></div>
+      <div class="antet-left">
+        <div class="antet-logo">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 28 L4 14 L16 5 L28 14 L28 28" stroke="#1A2332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M11 28 L11 20 Q11 18 13 18 L19 18 Q21 18 21 20 L21 28" stroke="#1A2332" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 14 L16 4 L30 14" stroke="#1A2332" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="12" y="9" width="8" height="6" rx="1" stroke="#1A2332" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="antet-text">
+          <h1>ÜREĞEN MİMARLIK</h1>
+          <p>Restorasyon &amp; Mimari Tasarım</p>
+          <small>Müşteri Finans Yönetim Sistemi</small>
+        </div>
+      </div>
+      <div class="antet-right" id="antet-stats">
+        <div class="antet-stat">
+          <div class="antet-stat-val" id="as-musteri">–</div>
+          <div class="antet-stat-lbl">Müşteri</div>
+        </div>
+        <div class="antet-stat">
+          <div class="antet-stat-val" id="as-proje">–</div>
+          <div class="antet-stat-lbl">Toplam Proje</div>
+        </div>
+        <div class="antet-stat">
+          <div class="antet-stat-val" id="as-oran" style="color:#C9A84C">–</div>
+          <div class="antet-stat-lbl">Tahsilat</div>
+        </div>
+      </div>
+    </div>
+    <div class="antet-bottom">
+      <span><span class="dot"></span>Restorasyon</span>
+      <span><span class="dot"></span>Tadilat</span>
+      <span><span class="dot"></span>İnşaat</span>
+      <span><span class="dot"></span>Mimari Tasarım</span>
+      <span style="margin-left:auto;color:#C9A84C;font-weight:600" id="antet-date"></span>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <div class="hdr">
+      <div>
+        <div style="font-size:16px;font-weight:600;color:#1A2332;margin-top:4px">Finansal Özet</div>
+        <div class="hdr-sub" id="sub-date"></div>
+      </div>
+      <div class="hdr-actions">
+        <button class="btn btn-kur" onclick="togglePanel('kur')">&#8645; Kurları Güncelle</button>
+        <button class="btn btn-gold" onclick="togglePanel('new')">
+          <svg viewBox="0 0 14 14"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+          Yeni Müşteri
+        </button>
+      </div>
+    </div>
+
+    <div class="kur-bar">
+      <span style="font-weight:600;color:#374151">Döviz Kurları</span>
+      <span>EUR/TRY <span class="kur-val" id="eur-d">–</span></span>
+      <span>USD/TRY <span class="kur-val" id="usd-d">–</span></span>
+    </div>
+
+    <div class="panel-kur" id="panel-kur">
+      <div class="phead">
+        <h2>&#8645; Döviz Kurlarını Güncelle</h2>
+        <button class="btn btn-ghost btn-sm" onclick="closePanel('kur')">✕ Kapat</button>
+      </div>
+      <div class="pbody">
+        <div class="fgrid" style="max-width:380px">
+          <div class="fg"><label>EUR / TRY</label><input id="k-eur" type="number" step="0.01"></div>
+          <div class="fg"><label>USD / TRY</label><input id="k-usd" type="number" step="0.01"></div>
+        </div>
+      </div>
+      <div class="pfoot">
+        <button class="btn btn-ghost btn-sm" onclick="closePanel('kur')">İptal</button>
+        <button class="btn btn-primary btn-sm" onclick="saveKur()">Kaydet</button>
+      </div>
+    </div>
+
+    <div class="panel-new" id="panel-new">
+      <div class="phead">
+        <h2>+ Yeni Müşteri Ekle</h2>
+        <button class="btn btn-ghost btn-sm" style="background:#D1FAE5;border-color:#BBF7D0;color:#166534" onclick="closePanel('new')">✕ Kapat</button>
+      </div>
+      <div class="pbody">
+        <div class="fgrid">
+          <div class="fg" style="grid-column:1/-1"><label>Müşteri İsmi <span style="color:#DC2626">*</span></label><input id="f-isim" placeholder="Ad Soyad"></div>
+        </div>
+        <div class="fgrid">
+          <div class="fg"><label>Ada / Parsel</label><input id="f-ada" placeholder="999 ada 01 parsel"></div>
+          <div class="fg"><label>Sözleşme Tarihi</label><input id="f-tarih" type="date"></div>
+        </div>
+        <div class="fgrid">
+          <div class="fg"><label>Proje Türü</label>
+            <select id="f-tur"><option>Tadilat</option><option>Restorasyon</option><option>İnşaat</option><option>Tasarım</option><option>Diğer</option></select>
+          </div>
+          <div class="fg"><label>Para Birimi <span style="color:#DC2626">*</span></label>
+            <select id="f-para"><option>TL</option><option>€</option><option>$</option></select>
+          </div>
+        </div>
+        <div class="fgrid">
+          <div class="fg"><label>Proje Bedeli <span style="color:#DC2626">*</span></label><input id="f-bedel" type="number" placeholder="0" min="0"></div>
+          <div class="fg"><label>İlk Ödeme (opsiyonel)</label><input id="f-ilk" type="number" placeholder="0" min="0"></div>
+        </div>
+        <div class="fg"><label>Not</label><input id="f-not" placeholder="Opsiyonel not..."></div>
+        <div class="f-err" id="f-err"></div>
+      </div>
+      <div class="pfoot">
+        <button class="btn btn-ghost btn-sm" style="background:#D1FAE5;border-color:#BBF7D0;color:#166534" onclick="closePanel('new')">İptal</button>
+        <button class="btn btn-gold btn-sm" onclick="addMusteri()">
+          <svg viewBox="0 0 14 14"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+          Müşteriyi Ekle
+        </button>
+      </div>
+    </div>
+
+    <div class="metrics" id="metrics"></div>
+
+    <div class="charts-row">
+      <div class="ccard">
+        <div class="ctitle"><span class="ctitle-dot"></span>Tahsilat Durumu (TL)</div>
+        <div style="position:relative;height:195px"><canvas id="barChart" role="img" aria-label="Müşteri tahsilat bar grafiği"></canvas></div>
+      </div>
+      <div class="ccard">
+        <div class="ctitle"><span class="ctitle-dot"></span>Portföy Dağılımı</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="position:relative;height:175px;width:175px;flex-shrink:0"><canvas id="dChart" role="img" aria-label="Portföy dağılımı donut grafiği"></canvas></div>
+          <div id="dlegend" style="font-size:12px;flex:1;min-width:0"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tcard">
+      <div class="tcard-hdr">
+        <h3>Müşteri Listesi</h3>
+        <span style="font-size:12px;color:#6B7A8D" id="tbl-cnt"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table><thead><tr>
+          <th style="width:28px">#</th>
+          <th style="width:158px">Müşteri</th>
+          <th style="width:112px">Ada / Parsel</th>
+          <th style="width:74px">Tür</th>
+          <th style="width:44px">Para</th>
+          <th style="width:100px;text-align:right">Proje Bedeli</th>
+          <th style="width:100px;text-align:right">Tahsil Edilen</th>
+          <th style="width:95px;text-align:right">Kalan</th>
+          <th style="width:90px">%</th>
+          <th style="width:85px">Durum</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody></table>
+      </div>
+    </div>
+
+    <div class="panel-det" id="panel-det">
+      <div class="phead">
+        <div class="phead-inner" id="det-head"></div>
+        <button class="btn btn-ghost btn-sm" style="background:#FEF3C7;border-color:#FDE68A;color:#78350F" onclick="closeDetail()">✕ Kapat</button>
+      </div>
+      <div class="pbody" id="det-body"></div>
+      <div class="pfoot">
+        <button class="btn btn-danger btn-sm" id="det-del">Müşteriyi Sil</button>
+        <button class="btn btn-ghost btn-sm" style="background:#FEF3C7;border-color:#FDE68A;color:#78350F" onclick="closeDetail()">Kapat</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const SK='mfd_uregen_v1';
+const DEF={kurlar:{EUR:51.4563,USD:44.5255},musteriler:[
+  {id:1,isim:'Özcan Kara',ada:'799 ada 07 parsel',tur:'Tadilat',para:'€',bedel:4500,tarih:'',not:'',odemeler:[{a:'1. Ödeme',t:'28.11.2025',tutar:2000,y:''}]},
+  {id:2,isim:'Yavuz Türker-ALLY',ada:'155 20,21,22..',tur:'Tadilat',para:'TL',bedel:550000,tarih:'',not:'',odemeler:[{a:'1. Ödeme',t:'',tutar:100000,y:''},{a:'2. Ödeme',t:'',tutar:75000,y:''},{a:'3. Ödeme',t:'',tutar:70000,y:''},{a:'4. Ödeme',t:'',tutar:290000,y:''}]},
+  {id:3,isim:'Ahmet Aytaç',ada:'111-4',tur:'Restorasyon',para:'€',bedel:20000,tarih:'',not:'',odemeler:[{a:'1. Ödeme',t:'',tutar:4500,y:''},{a:'2. Ödeme',t:'',tutar:3000,y:''}]},
+  {id:4,isim:'Necla Işık',ada:'157/17',tur:'Restorasyon',para:'TL',bedel:300000,tarih:'',not:'',odemeler:[{a:'1. Ödeme',t:'',tutar:150000,y:''}]}
+]};
+let S;
+try{S=JSON.parse(localStorage.getItem(SK))||JSON.parse(JSON.stringify(DEF))}catch{S=JSON.parse(JSON.stringify(DEF))}
+function sv(){try{localStorage.setItem(SK,JSON.stringify(S))}catch{}}
+function toTL(v,p){return p==='TL'?v:p==='€'?v*S.kurlar.EUR:p==='$'?v*S.kurlar.USD:v}
+function fmt(n,p){return n||n===0?n.toLocaleString('tr-TR',{maximumFractionDigits:0})+(p?' '+p:''):'–'}
+function fmtTL(n){return n.toLocaleString('tr-TR',{maximumFractionDigits:0})+' ₺'}
+function fmtP(v){return(v*100).toFixed(1)+'%'}
+function calc(m){const t=m.odemeler.reduce((s,o)=>s+(o.tutar||0),0);const k=m.bedel-t;const p=m.bedel>0?t/m.bedel:0;return{t,k,p,tlB:toTL(m.bedel,m.para),tlT:toTL(t,m.para),tlK:toTL(k,m.para)}}
+function dur(p){return p>=1?{txt:'Tamamlandı',cls:'bg',dot:'#10B981'}:p>=0.5?{txt:'Devam Ediyor',cls:'bb',dot:'#3B82F6'}:p>0?{txt:'Başladı',cls:'ba',dot:'#F59E0B'}:{txt:'Bekliyor',cls:'bk',dot:'#9CA3AF'}}
+function ini(s){return s.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+const AV=[['#DBEAFE','#1E40AF'],['#D1FAE5','#065F46'],['#FEF3C7','#92400E'],['#EDE9FE','#4C1D95'],['#FCE7F3','#831843'],['#FFEDD5','#9A3412']];
+const CL=['#3B82F6','#10B981','#C9A84C','#8B5CF6','#EC4899','#F97316'];
+let bC,dC;
+
+function rAntet(){
+  let tB=0,tT=0,dn=0;
+  S.musteriler.forEach(m=>{const c=calc(m);tB+=c.tlB;tT+=c.tlT;if(c.p>=1)dn++});
+  const p=tB>0?tT/tB:0;
+  document.getElementById('as-musteri').textContent=S.musteriler.length;
+  document.getElementById('as-proje').textContent=tB>=1e6?(tB/1e6).toFixed(1)+'M ₺':fmtTL(tB);
+  document.getElementById('as-oran').textContent=fmtP(p);
+  const now=new Date();
+  document.getElementById('antet-date').textContent=now.toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});
+}
+
+function rMetrics(){
+  let tB=0,tT=0,tK=0,dn=0;
+  S.musteriler.forEach(m=>{const c=calc(m);tB+=c.tlB;tT+=c.tlT;tK+=c.tlK;if(c.p>=1)dn++});
+  const p=tB>0?tT/tB:0;
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric metric-toplam">
+      <div class="mlabel">Toplam Proje</div>
+      <div class="mval">${fmtTL(tB)}</div>
+      <div class="msub">${S.musteriler.length} aktif müşteri</div>
+    </div>
+    <div class="metric metric-tahsil">
+      <div class="mlabel">Tahsil Edilen</div>
+      <div class="mval">${fmtTL(tT)}</div>
+      <div class="msub">${fmtP(p)} tahsilat oranı</div>
+      <div class="mbar" style="background:rgba(255,255,255,.25)"><div class="mfill" style="width:${Math.min(p*100,100)}%;background:rgba(255,255,255,.8)"></div></div>
+    </div>
+    <div class="metric metric-kalan">
+      <div class="mlabel">Kalan Bakiye</div>
+      <div class="mval">${fmtTL(tK)}</div>
+      <div class="msub">${S.musteriler.length-dn} devam eden</div>
+      <div class="mbar" style="background:#E5EAF0"><div class="mfill" style="width:${tB>0?Math.min(tK/tB*100,100):0}%;background:#94A3B8"></div></div>
+    </div>
+    <div class="metric metric-tamam">
+      <div class="mlabel">Tamamlanan</div>
+      <div class="mval">${dn} / ${S.musteriler.length}</div>
+      <div class="msub">proje</div>
+      <div class="mbar" style="background:#E8D9A0"><div class="mfill" style="width:${S.musteriler.length?dn/S.musteriler.length*100:0}%;background:#C9A84C"></div></div>
+    </div>`;
+  document.getElementById('sub-date').textContent='Son güncelleme: '+new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('eur-d').textContent=S.kurlar.EUR.toFixed(4);
+  document.getElementById('usd-d').textContent=S.kurlar.USD.toFixed(4);
+}
+
+function rCharts(){
+  const lbl=S.musteriler.map(m=>m.isim.split(' ')[0]);
+  const td=S.musteriler.map(m=>Math.round(calc(m).tlT));
+  const kd=S.musteriler.map(m=>Math.round(calc(m).tlK));
+  if(bC)bC.destroy();
+  bC=new Chart(document.getElementById('barChart'),{type:'bar',data:{labels:lbl,datasets:[
+    {label:'Tahsil',data:td,backgroundColor:'#1D9E75',borderRadius:5,borderSkipped:false},
+    {label:'Kalan',data:kd,backgroundColor:'#E2E8F0',borderRadius:5,borderSkipped:false}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:11},color:'#9CA3AF'}},y:{grid:{color:'#F1F5F9'},ticks:{font:{size:10},color:'#9CA3AF',callback:v=>v>=1e6?Math.round(v/1e6)+'M':v>=1000?Math.round(v/1000)+'K':v}}},interaction:{mode:'index',intersect:false}}});
+  const pd=S.musteriler.map(m=>Math.round(calc(m).tlB));
+  const tot=pd.reduce((a,b)=>a+b,0);
+  if(dC)dC.destroy();
+  dC=new Chart(document.getElementById('dChart'),{type:'doughnut',data:{labels:S.musteriler.map(m=>m.isim),datasets:[{data:pd,backgroundColor:CL,borderWidth:3,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false}}}});
+  document.getElementById('dlegend').innerHTML=S.musteriler.map((m,i)=>`<div style="display:flex;align-items:center;gap:7px;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:3px;background:${CL[i]};flex-shrink:0"></div><span style="color:#6B7A8D;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${m.isim.split(' ')[0]}</span><span style="font-weight:700;color:#1A2332;font-size:12px">${tot?Math.round(pd[i]/tot*100):0}%</span></div>`).join('');
+}
+
+function rTable(){
+  let rows='',tB=0,tT=0,tK=0;
+  S.musteriler.forEach((m,i)=>{
+    const c=calc(m);const d=dur(c.p);tB+=c.tlB;tT+=c.tlT;tK+=c.tlK;
+    const fc=c.p>=1?'#10B981':c.p>=0.5?'#3B82F6':'#F59E0B';
+    const[bg,tc]=AV[i%AV.length];
+    rows+=`<tr class="trow" onclick="openDetail(${m.id})">
+      <td style="color:#9CA3AF;font-weight:600">${i+1}</td>
+      <td><div style="display:flex;align-items:center;gap:9px">
+        <div class="avtr" style="width:32px;height:32px;font-size:11px;background:${bg};color:${tc}">${ini(m.isim)}</div>
+        <div><div style="font-weight:600">${m.isim}</div><div style="font-size:11px;color:#9CA3AF">${m.tur}</div></div>
+      </div></td>
+      <td style="font-size:12px;color:#6B7A8D">${m.ada}</td>
+      <td style="font-size:12px">${m.tur}</td>
+      <td style="text-align:center;font-weight:700">${m.para}</td>
+      <td style="text-align:right">${fmt(m.bedel,m.para)}</td>
+      <td style="text-align:right;font-weight:600;color:#065F46">${fmt(c.t,m.para)}</td>
+      <td style="text-align:right;color:#6B7A8D">${fmt(c.k,m.para)}</td>
+      <td><div style="font-size:12px;font-weight:600">${fmtP(c.p)}</div><div class="pb"><div class="pf" style="width:${Math.min(c.p*100,100)}%;background:${fc}"></div></div></td>
+      <td><span class="badge ${d.cls}"><span class="dot" style="background:${d.dot}"></span>${d.txt}</span></td>
+    </tr>`;
+  });
+  const gp=tB>0?tT/tB:0;
+  rows+=`<tr class="tot"><td colspan="5" style="color:#6B7A8D">TOPLAM (TL)</td>
+    <td style="text-align:right">${fmtTL(tB)}</td>
+    <td style="text-align:right;color:#065F46">${fmtTL(tT)}</td>
+    <td style="text-align:right;color:#6B7A8D">${fmtTL(tK)}</td>
+    <td>${fmtP(gp)}<div class="pb"><div class="pf" style="width:${Math.min(gp*100,100)}%;background:#C9A84C"></div></div></td>
+    <td></td></tr>`;
+  document.getElementById('tbody').innerHTML=rows;
+  document.getElementById('tbl-cnt').textContent=S.musteriler.length+' kayıt';
+}
+
+function render(){rAntet();rMetrics();rCharts();rTable()}
+
+function togglePanel(type){
+  const isOpen=document.getElementById('panel-'+type).classList.contains('open');
+  ['new','kur'].forEach(k=>closePanel(k));
+  if(!isOpen){
+    if(type==='kur'){document.getElementById('k-eur').value=S.kurlar.EUR;document.getElementById('k-usd').value=S.kurlar.USD}
+    if(type==='new'){['f-isim','f-ada','f-bedel','f-ilk','f-not'].forEach(x=>document.getElementById(x).value='');document.getElementById('f-tarih').value='';document.getElementById('f-err').style.display='none'}
+    document.getElementById('panel-'+type).classList.add('open');
+    setTimeout(()=>document.getElementById('panel-'+type).scrollIntoView({behavior:'smooth',block:'start'}),60);
+  }
+}
+function closePanel(type){document.getElementById('panel-'+type).classList.remove('open')}
+
+function openDetail(id){
+  const m=S.musteriler.find(x=>x.id===id);if(!m)return;
+  const idx=S.musteriler.indexOf(m);const c=calc(m);const d=dur(c.p);
+  const[bg,tc]=AV[idx%AV.length];
+  const fc=c.p>=1?'#10B981':c.p>=0.5?'#3B82F6':'#F59E0B';
+  document.getElementById('det-head').innerHTML=`
+    <div class="avtr" style="width:40px;height:40px;font-size:14px;background:${bg};color:${tc}">${ini(m.isim)}</div>
+    <div><div style="font-size:15px;font-weight:700;color:#78350F">${m.isim}</div>
+    <div style="font-size:12px;color:#B45309">${m.tur} · ${m.ada}</div></div>`;
+  document.getElementById('det-del').onclick=()=>delMusteri(id);
+  const pr=m.odemeler.map((o,i)=>`<tr>
+    <td>${o.a}</td><td style="color:#6B7A8D">${o.t||'–'}</td>
+    <td style="text-align:right;font-weight:700;color:#065F46">${fmt(o.tutar,m.para)}</td>
+    <td style="color:#6B7A8D">${o.y||'–'}</td>
+    <td><button class="delbtn" onclick="delOdeme(${id},${i})">✕</button></td>
+  </tr>`).join('');
+  document.getElementById('det-body').innerHTML=`
+    <div class="psec">
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:8px">
+        <span style="color:#92400E">Tahsilat İlerlemesi</span><span style="color:#78350F">${fmtP(c.p)}</span>
+      </div>
+      <div class="bpbar"><div class="bpfill" style="width:${Math.min(c.p*100,100)}%;background:${fc}"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12px">
+        <span style="color:#92400E">Tahsil: <strong style="color:#065F46">${fmt(c.t,m.para)}</strong></span>
+        <span style="color:#92400E">Kalan: <strong style="color:#1A2332">${fmt(c.k,m.para)}</strong></span>
+        <span style="color:#92400E">Toplam: <strong>${fmt(m.bedel,m.para)}</strong></span>
+      </div>
+    </div>
+    <div class="infogrid">
+      <div class="info-box"><label>Para Birimi</label><span>${m.para}</span></div>
+      <div class="info-box"><label>TL Karşılığı</label><span>${fmtTL(c.tlB)}</span></div>
+      <div class="info-box"><label>Sözleşme Tarihi</label><span>${m.tarih||'–'}</span></div>
+      <div class="info-box"><label>Durum</label><span class="badge ${d.cls}"><span class="dot" style="background:${d.dot}"></span>${d.txt}</span></div>
+      ${m.not?`<div class="info-box" style="grid-column:1/-1"><label>Not</label><span style="font-weight:400">${m.not}</span></div>`:''}
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#78350F;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Ödeme Geçmişi</div>
+    <table class="ptable">
+      <thead><tr><th>Açıklama</th><th>Tarih</th><th style="text-align:right">Tutar</th><th>Yöntem</th><th></th></tr></thead>
+      <tbody>${pr||'<tr><td colspan="5" style="color:#9CA3AF;text-align:center;padding:14px">Henüz ödeme kaydı yok</td></tr>'}</tbody>
+    </table>
+    <div class="sec-title">Yeni Ödeme Ekle</div>
+    <div class="addrow">
+      <div class="fg"><label>Açıklama</label><input id="p-a" placeholder="${m.odemeler.length+1}. Ödeme"></div>
+      <div class="fg"><label>Tutar (${m.para})</label><input id="p-t" type="number" placeholder="0"></div>
+      <div class="fg"><label>Tarih</label><input id="p-d" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
+      <div class="fg"><label>&nbsp;</label><button class="btn btn-gold btn-sm" onclick="addOdeme(${id})">Ekle</button></div>
+    </div>`;
+  const panel=document.getElementById('panel-det');
+  panel.classList.add('open');
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),60);
+}
+function closeDetail(){document.getElementById('panel-det').classList.remove('open')}
+
+function addMusteri(){
+  const isim=document.getElementById('f-isim').value.trim();
+  const bedel=parseFloat(document.getElementById('f-bedel').value);
+  const err=document.getElementById('f-err');
+  ['f-isim','f-bedel'].forEach(x=>document.getElementById(x).classList.remove('err'));
+  if(!isim){document.getElementById('f-isim').classList.add('err');err.textContent='Müşteri ismi zorunludur.';err.style.display='block';return}
+  if(!bedel||bedel<=0){document.getElementById('f-bedel').classList.add('err');err.textContent='Geçerli bir proje bedeli girin.';err.style.display='block';return}
+  const ilk=parseFloat(document.getElementById('f-ilk').value)||0;
+  const m={id:Date.now(),isim,ada:document.getElementById('f-ada').value.trim(),tur:document.getElementById('f-tur').value,para:document.getElementById('f-para').value,bedel,tarih:document.getElementById('f-tarih').value,not:document.getElementById('f-not').value.trim(),odemeler:[]};
+  if(ilk>0)m.odemeler.push({a:'1. Ödeme',t:new Date().toLocaleDateString('tr-TR'),tutar:ilk,y:''});
+  S.musteriler.push(m);sv();render();closePanel('new');
+}
+
+function addOdeme(id){
+  const m=S.musteriler.find(x=>x.id===id);
+  const t=parseFloat(document.getElementById('p-t').value);
+  if(!t||t<=0){document.getElementById('p-t').classList.add('err');return}
+  m.odemeler.push({a:document.getElementById('p-a').value||(m.odemeler.length+1)+'. Ödeme',t:document.getElementById('p-d').value,tutar:t,y:''});
+  sv();render();openDetail(id);
+}
+
+function delOdeme(id,i){
+  if(!confirm('Bu ödeme silinsin mi?'))return;
+  S.musteriler.find(x=>x.id===id).odemeler.splice(i,1);sv();render();openDetail(id);
+}
+
+function delMusteri(id){
+  if(!confirm('Bu müşteriyi silmek istediğinize emin misiniz?'))return;
+  S.musteriler=S.musteriler.filter(m=>m.id!==id);sv();render();closeDetail();
+}
+
+function saveKur(){
+  const e=parseFloat(document.getElementById('k-eur').value),u=parseFloat(document.getElementById('k-usd').value);
+  if(!e||!u)return;S.kurlar={EUR:e,USD:u};sv();render();closePanel('kur');
+}
+
+render();
+</script>
