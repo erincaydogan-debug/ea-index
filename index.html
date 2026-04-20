@@ -136,8 +136,32 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
 .delbtn:hover{color:#EF4444;background:#FEE2E2}
 .addrow{display:grid;grid-template-columns:2fr 1.5fr 1.5fr auto;gap:8px;align-items:end;margin-top:10px}
 .sec-title{font-size:12px;font-weight:600;color:#92400E;text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px;padding-top:14px;border-top:1px dashed #FDE68A}
+
+/* === ŞİFRE EKRANI === */
+.lock-screen{position:fixed;inset:0;background:#1A2332;display:flex;align-items:center;justify-content:center;z-index:9999}
+.lock-box{background:#fff;border-radius:16px;padding:40px 36px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.lock-logo{font-size:28px;font-weight:700;color:#1A2332;margin-bottom:4px}
+.lock-sub{font-size:13px;color:#6B7A8D;margin-bottom:28px}
+.lock-box input{width:100%;padding:12px 14px;border:1px solid #D1D9E0;border-radius:8px;font-size:15px;text-align:center;letter-spacing:4px;outline:none;margin-bottom:10px}
+.lock-box input:focus{border-color:#1D9E75;box-shadow:0 0 0 3px #D1FAE5}
+.lock-box input.err{border-color:#EF4444;box-shadow:0 0 0 3px #FEE2E2;animation:shake .3s}
+.lock-btn{width:100%;padding:12px;background:#1D9E75;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.lock-btn:hover{opacity:.9}
+.lock-err{font-size:12px;color:#991B1B;margin-top:8px;height:16px}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 </style>
 
+
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-logo">🔒 Üreğen Mimarlık</div>
+    <div class="lock-sub">Devam etmek için şifreyi girin</div>
+    <input type="password" id="lockInput" placeholder="••••••" maxlength="20"
+      onkeydown="if(event.key==='Enter')checkLock()">
+    <button class="lock-btn" onclick="checkLock()">Giriş</button>
+    <div class="lock-err" id="lockErr"></div>
+  </div>
+</div>
 <div class="app" id="app">
 
   <div class="hdr">
@@ -288,6 +312,27 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 const DEF={"kurlar":{"EUR":51.4563,"USD":44.5255},"musteriler":[{"id":1,"isim":"Özcan Kara","ada":"799 ada 07 parsel","tur":"Tadilat","para":"€","bedel":4500,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"28.11.2025","tutar":2000,"y":""}]},{"id":2,"isim":"Yavuz Türker-ALLY","ada":"155 20,21,22..","tur":"Tadilat","para":"TL","bedel":550000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":100000,"y":""},{"a":"2. Ödeme","t":"","tutar":75000,"y":""},{"a":"3. Ödeme","t":"","tutar":70000,"y":""},{"a":"4. Ödeme","t":"","tutar":290000,"y":""}]},{"id":3,"isim":"Ahmet Aytaç","ada":"111-4","tur":"Restorasyon","para":"€","bedel":20000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":4500,"y":""},{"a":"2. Ödeme","t":"","tutar":3000,"y":""}]},{"id":4,"isim":"Necla Işık","ada":"157/17","tur":"Restorasyon","para":"TL","bedel":300000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":150000,"y":""}]}]};
+
+
+// Şifre kontrolü
+const PASS = '524852';
+function checkLock(){
+  const v = document.getElementById('lockInput').value;
+  if(v === PASS){
+    document.getElementById('lockScreen').style.display='none';
+    sessionStorage.setItem('unlocked','1');
+  } else {
+    const inp = document.getElementById('lockInput');
+    inp.classList.add('err');
+    document.getElementById('lockErr').textContent='Hatalı şifre, tekrar deneyin.';
+    inp.value='';
+    setTimeout(()=>inp.classList.remove('err'),500);
+  }
+}
+// Oturum açıksa direkt geç
+if(sessionStorage.getItem('unlocked')==='1'){
+  document.getElementById('lockScreen').style.display='none';
+}
 
 // Global değişkenler - Firebase callback'inden önce tanımlanmalı
 var S = JSON.parse(JSON.stringify(DEF));
