@@ -1,17 +1,18 @@
+
 <h2 class="sr-only">Müşteri Finans Dashboard — proje ve ödeme takip uygulaması</h2>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body,div,span,input,select,button,table,th,td{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
- 
+
 /* === SAYFA ARKA PLANI === */
 .app{background:#F0F2F5;min-height:100vh;padding:20px;border-radius:12px}
- 
+
 /* === HEADER === */
 .hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
 .hdr-title{font-size:22px;font-weight:600;color:#1A2332;letter-spacing:-0.3px}
 .hdr-sub{font-size:12px;color:#6B7A8D;margin-top:3px}
 .hdr-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
- 
+
 /* === BUTONLAR === */
 .btn{border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;font-weight:500;border:none;transition:opacity .15s,transform .1s}
 .btn:active{transform:scale(0.97)}
@@ -25,11 +26,11 @@ body,div,span,input,select,button,table,th,td{font-family:-apple-system,BlinkMac
 .btn-sm{padding:5px 11px;font-size:12px}
 .btn-kur{background:#EEF2FF;color:#3730A3;border:1px solid #C7D2FE}
 .btn-kur:hover{background:#E0E7FF}
- 
+
 /* === KUR BAR === */
 .kur-bar{display:flex;align-items:center;gap:20px;padding:10px 16px;background:#fff;border-radius:10px;border:1px solid #E5EAF0;margin-bottom:18px;flex-wrap:wrap;font-size:13px;color:#6B7A8D}
 .kur-val{font-weight:600;color:#1A2332;margin-left:4px}
- 
+
 /* === METRİK KARTLAR === */
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .metric{border-radius:12px;padding:16px 18px;position:relative;overflow:hidden}
@@ -53,12 +54,12 @@ body,div,span,input,select,button,table,th,td{font-family:-apple-system,BlinkMac
 .mbar-dark{background:#E5EAF0}
 .mbar-indigo{background:#C7D2FE}
 .mfill{height:100%;border-radius:2px}
- 
+
 /* === GRAFİK KARTLAR === */
 .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
 .ccard{background:#fff;border:1px solid #E5EAF0;border-radius:12px;padding:18px}
 .ctitle{font-size:13px;font-weight:600;color:#374151;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #F3F4F6}
- 
+
 /* === TABLO KART === */
 .tcard{background:#fff;border:1px solid #E5EAF0;border-radius:12px;overflow:hidden;margin-bottom:18px}
 .tcard-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #F3F4F6;background:#FAFBFC}
@@ -78,7 +79,7 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
 .pb{height:5px;background:#E5EAF0;border-radius:3px;overflow:hidden;margin-top:3px}
 .pf{height:100%;border-radius:3px}
 .avtr{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
- 
+
 /* === YENİ MÜŞTERİ PANELİ — teal/yeşil tema === */
 .panel-new{display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:14px;margin-bottom:18px}
 .panel-new.open{display:block}
@@ -89,7 +90,7 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
 .panel-new .fg input,.panel-new .fg select{background:#fff;border:1px solid #BBF7D0;border-radius:8px;padding:9px 11px;width:100%;color:#1A2332;font-size:13px}
 .panel-new .fg input:focus,.panel-new .fg select:focus{outline:none;border-color:#16A34A;box-shadow:0 0 0 3px #DCFCE7}
 .panel-new .fg label{font-size:12px;font-weight:600;color:#166534;margin-bottom:4px;display:block}
- 
+
 /* === KUR PANELİ — indigo tema === */
 .panel-kur{display:none;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:14px;margin-bottom:18px}
 .panel-kur.open{display:block}
@@ -100,7 +101,7 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
 .panel-kur .fg input{background:#fff;border:1px solid #C7D2FE;border-radius:8px;padding:9px 11px;width:100%;color:#1A2332;font-size:13px}
 .panel-kur .fg input:focus{outline:none;border-color:#4F46E5;box-shadow:0 0 0 3px #E0E7FF}
 .panel-kur .fg label{font-size:12px;font-weight:600;color:#312E81;margin-bottom:4px;display:block}
- 
+
 /* === DETAY PANELİ — turuncu/amber tema === */
 .panel-det{display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:14px;margin-bottom:18px}
 .panel-det.open{display:block}
@@ -112,13 +113,13 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
 .panel-det .fg input,.panel-det .fg select{background:#fff;border:1px solid #FDE68A;border-radius:8px;padding:9px 11px;width:100%;color:#1A2332;font-size:13px}
 .panel-det .fg input:focus{outline:none;border-color:#D97706;box-shadow:0 0 0 3px #FEF3C7}
 .panel-det .fg label{font-size:12px;font-weight:600;color:#92400E;margin-bottom:4px;display:block}
- 
+
 /* === ORTAK FORM === */
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .fg{display:flex;flex-direction:column}
 .fg input.err{border-color:#EF4444 !important;box-shadow:0 0 0 3px #FEE2E2 !important}
 .f-err{font-size:12px;color:#991B1B;margin-top:6px;display:none}
- 
+
 /* === DETAY İÇERİK === */
 .psec{background:#FEF9E7;border:1px solid #FDE68A;border-radius:10px;padding:14px;margin-bottom:16px}
 .bpbar{height:10px;background:#FDE68A;border-radius:5px;overflow:hidden}
@@ -136,9 +137,9 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
 .addrow{display:grid;grid-template-columns:2fr 1.5fr 1.5fr auto;gap:8px;align-items:end;margin-top:10px}
 .sec-title{font-size:12px;font-weight:600;color:#92400E;text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px;padding-top:14px;border-top:1px dashed #FDE68A}
 </style>
- 
+
 <div class="app" id="app">
- 
+
   <div class="hdr">
     <div>
       <div class="hdr-title">Müşteri Finans Dashboard</div>
@@ -154,13 +155,13 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
       </button>
     </div>
   </div>
- 
+
   <div class="kur-bar">
     <span style="font-weight:600;color:#374151">Döviz Kurları</span>
     <span>EUR/TRY <span class="kur-val" id="eur-d">–</span></span>
     <span>USD/TRY <span class="kur-val" id="usd-d">–</span></span>
   </div>
- 
+
   <!-- KUR PANELİ -->
   <div class="panel-kur" id="panel-kur">
     <div class="phead">
@@ -181,7 +182,7 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
       <button class="btn btn-primary btn-sm" onclick="saveKur()">Kaydet</button>
     </div>
   </div>
- 
+
   <!-- YENİ MÜŞTERİ PANELİ -->
   <div class="panel-new" id="panel-new">
     <div class="phead">
@@ -225,10 +226,10 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
       </button>
     </div>
   </div>
- 
+
   <!-- METRİKLER -->
   <div class="metrics" id="metrics"></div>
- 
+
   <!-- GRAFİKLER -->
   <div class="charts-row">
     <div class="ccard">
@@ -243,7 +244,7 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
       </div>
     </div>
   </div>
- 
+
   <!-- MÜŞTERİ TABLOSU -->
   <div class="tcard">
     <div class="tcard-hdr">
@@ -266,7 +267,7 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
       <tbody id="tbody"></tbody></table>
     </div>
   </div>
- 
+
   <!-- DETAY PANELİ -->
   <div class="panel-det" id="panel-det">
     <div class="phead">
@@ -279,26 +280,26 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
       <button class="btn btn-ghost btn-sm" style="background:#FEF3C7;border-color:#FDE68A;color:#78350F" onclick="closeDetail()">Kapat</button>
     </div>
   </div>
- 
+
 </div>
- 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 const DEF={"kurlar":{"EUR":51.4563,"USD":44.5255},"musteriler":[{"id":1,"isim":"Özcan Kara","ada":"799 ada 07 parsel","tur":"Tadilat","para":"€","bedel":4500,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"28.11.2025","tutar":2000,"y":""}]},{"id":2,"isim":"Yavuz Türker-ALLY","ada":"155 20,21,22..","tur":"Tadilat","para":"TL","bedel":550000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":100000,"y":""},{"a":"2. Ödeme","t":"","tutar":75000,"y":""},{"a":"3. Ödeme","t":"","tutar":70000,"y":""},{"a":"4. Ödeme","t":"","tutar":290000,"y":""}]},{"id":3,"isim":"Ahmet Aytaç","ada":"111-4","tur":"Restorasyon","para":"€","bedel":20000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":4500,"y":""},{"a":"2. Ödeme","t":"","tutar":3000,"y":""}]},{"id":4,"isim":"Necla Işık","ada":"157/17","tur":"Restorasyon","para":"TL","bedel":300000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":150000,"y":""}]}]};
- 
+
 // Global değişkenler - Firebase callback'inden önce tanımlanmalı
 var S = JSON.parse(JSON.stringify(DEF));
 var curDetId = null;
 var dbRef = null;
- 
+
 // Yükleniyor göstergesi
 document.getElementById('app').style.opacity='0.4';
 document.getElementById('app').style.pointerEvents='none';
- 
+
 function sv(){ if(dbRef) dbRef.set(S); }
- 
+
 // Firebase başlat
 firebase.initializeApp({
   apiKey:"AIzaSyCx-uaVkif18MN-F8sCdhq8Xvz8u0uegUk",
@@ -310,7 +311,7 @@ firebase.initializeApp({
   appId:"1:453300268604:web:593863fd68cad315805d39"
 });
 dbRef = firebase.database().ref('dashboard');
- 
+
 dbRef.on('value', snap => {
   const data = snap.val();
   if(data){
@@ -337,7 +338,7 @@ const AV=[['#DBEAFE','#1E40AF'],['#D1FAE5','#065F46'],['#FEF3C7','#92400E'],['#E
 function avHtml(i,sz,fs){const[bg,c]=AV[i%AV.length];return`<div class="avtr" style="width:${sz}px;height:${sz}px;font-size:${fs}px;background:${bg};color:${c}">`}
 const CL=['#3B82F6','#10B981','#F59E0B','#8B5CF6','#EC4899','#F97316'];
 let bC,dC;
- 
+
 function rMetrics(){
   let tB=0,tT=0,tK=0,dn=0;
   S.musteriler.forEach(m=>{const c=calc(m);tB+=c.tlB;tT+=c.tlT;tK+=c.tlK;if(c.p>=1)dn++});
@@ -370,7 +371,7 @@ function rMetrics(){
   document.getElementById('eur-d').textContent=S.kurlar.EUR.toFixed(4);
   document.getElementById('usd-d').textContent=S.kurlar.USD.toFixed(4);
 }
- 
+
 function rCharts(){
   const lbl=S.musteriler.map(m=>m.isim.split(' ')[0]);
   const td=S.musteriler.map(m=>Math.round(calc(m).tlT));
@@ -386,7 +387,7 @@ function rCharts(){
   dC=new Chart(document.getElementById('dChart'),{type:'doughnut',data:{labels:S.musteriler.map(m=>m.isim),datasets:[{data:pd,backgroundColor:CL,borderWidth:3,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false}}}});
   document.getElementById('dlegend').innerHTML=S.musteriler.map((m,i)=>`<div style="display:flex;align-items:center;gap:7px;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:3px;background:${CL[i]};flex-shrink:0"></div><span style="color:#6B7A8D;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${m.isim.split(' ')[0]}</span><span style="font-weight:700;color:#1A2332;font-size:12px">${tot?Math.round(pd[i]/tot*100):0}%</span></div>`).join('');
 }
- 
+
 function rTable(){
   let rows='',tB=0,tT=0,tK=0;
   S.musteriler.forEach((m,i)=>{
@@ -421,9 +422,9 @@ function rTable(){
   document.getElementById('tbody').innerHTML=rows;
   document.getElementById('tbl-cnt').textContent=S.musteriler.length+' kayıt';
 }
- 
+
 function render(){rMetrics();rCharts();rTable()}
- 
+
 function togglePanel(type){
   const keys=['new','kur'];
   const isOpen=document.getElementById('panel-'+type).classList.contains('open');
@@ -436,7 +437,7 @@ function togglePanel(type){
   }
 }
 function closePanel(type){document.getElementById('panel-'+type).classList.remove('open')}
- 
+
 function openDetail(id){
   const m=S.musteriler.find(x=>x.id===id);if(!m)return;
   curDetId=id;
@@ -491,7 +492,7 @@ function openDetail(id){
   setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),60);
 }
 function closeDetail(){document.getElementById('panel-det').classList.remove('open');curDetId=null}
- 
+
 function addMusteri(){
   const isim=document.getElementById('f-isim').value.trim();
   const bedel=parseFloat(document.getElementById('f-bedel').value);
@@ -504,7 +505,7 @@ function addMusteri(){
   if(ilk>0)m.odemeler.push({a:'1. Ödeme',t:new Date().toLocaleDateString('tr-TR'),tutar:ilk,y:''});
   S.musteriler.push(m);sv();render();closePanel('new');
 }
- 
+
 function addOdeme(id){
   const m=S.musteriler.find(x=>x.id===id);
   const t=parseFloat(document.getElementById('p-t').value);
@@ -512,21 +513,21 @@ function addOdeme(id){
   m.odemeler.push({a:document.getElementById('p-a').value||(m.odemeler.length+1)+'. Ödeme',t:document.getElementById('p-d').value,tutar:t,y:''});
   sv();render();openDetail(id);
 }
- 
+
 function delOdeme(id,i){
   if(!confirm('Bu ödeme silinsin mi?'))return;
   S.musteriler.find(x=>x.id===id).odemeler.splice(i,1);sv();render();openDetail(id);
 }
- 
+
 function delMusteri(id){
   if(!confirm('Bu müşteriyi silmek istediğinize emin misiniz?'))return;
   S.musteriler=S.musteriler.filter(m=>m.id!==id);sv();render();closeDetail();
 }
- 
+
 function saveKur(){
   const e=parseFloat(document.getElementById('k-eur').value),u=parseFloat(document.getElementById('k-usd').value);
   if(!e||!u)return;S.kurlar={EUR:e,USD:u};sv();render();closePanel('kur');
 }
- 
+
 // render() Firebase tarafından tetikleniyor
 </script>
