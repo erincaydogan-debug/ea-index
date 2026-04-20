@@ -1,4 +1,3 @@
-
 <h2 class="sr-only">Müşteri Finans Dashboard — proje ve ödeme takip uygulaması</h2>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -284,73 +283,49 @@ tr.tot td{font-weight:600;background:#F0F2F5;font-size:12px}
 </div>
  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+const DEF={"kurlar":{"EUR":51.4563,"USD":44.5255},"musteriler":[{"id":1,"isim":"Özcan Kara","ada":"799 ada 07 parsel","tur":"Tadilat","para":"€","bedel":4500,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"28.11.2025","tutar":2000,"y":""}]},{"id":2,"isim":"Yavuz Türker-ALLY","ada":"155 20,21,22..","tur":"Tadilat","para":"TL","bedel":550000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":100000,"y":""},{"a":"2. Ödeme","t":"","tutar":75000,"y":""},{"a":"3. Ödeme","t":"","tutar":70000,"y":""},{"a":"4. Ödeme","t":"","tutar":290000,"y":""}]},{"id":3,"isim":"Ahmet Aytaç","ada":"111-4","tur":"Restorasyon","para":"€","bedel":20000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":4500,"y":""},{"a":"2. Ödeme","t":"","tutar":3000,"y":""}]},{"id":4,"isim":"Necla Işık","ada":"157/17","tur":"Restorasyon","para":"TL","bedel":300000,"tarih":"","not":"","odemeler":[{"a":"1. Ödeme","t":"","tutar":150000,"y":""}]}]};
  
-const firebaseConfig = {
-  apiKey: "AIzaSyCx-uaVkif18MN-F8sCdhq8Xvz8u0uegUk",
-  authDomain: "my-first-project-7eb0a.firebaseapp.com",
-  databaseURL: "https://my-first-project-7eb0a-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "my-first-project-7eb0a",
-  storageBucket: "my-first-project-7eb0a.firebasestorage.app",
-  messagingSenderId: "453300268604",
-  appId: "1:453300268604:web:593863fd68cad315805d39"
-};
- 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const dbRef = ref(db, 'dashboard');
- 
-const DEF = {kurlar:{EUR:51.4563,USD:44.5255},musteriler:[
-  {id:1,isim:'Özcan Kara',ada:'799 ada 07 parsel',tur:'Tadilat',para:'€',bedel:4500,tarih:'',not:'',odemeler:[{a:'1. Ödeme',t:'28.11.2025',tutar:2000,y:''}]},
-  {id:2,isim:'Yavuz Türker-ALLY',ada:'155 20,21,22..',tur:'Tadilat',para:'TL',bedel:550000,tarih:'',not:'',odemeler:[{a:'1. Ödeme',t:'',tutar:100000,y:''},{a:'2. Ödeme',t:'',tutar:75000,y:''},{a:'3. Ödeme',t:'',tutar:70000,y:''},{a:'4. Ödeme',t:'',tutar:290000,y:''}]},
-  {id:3,isim:'Ahmet Aytaç',ada:'111-4',tur:'Restorasyon',para:'€',bedel:20000,tarih:'',not:'',odemeler:[{a:'1. Ödeme',t:'',tutar:4500,y:''},{a:'2. Ödeme',t:'',tutar:3000,y:''}]},
-  {id:4,isim:'Necla Işık',ada:'157/17',tur:'Restorasyon',para:'TL',bedel:300000,tarih:'',not:'',odemeler:[{a:'1. Ödeme',t:'',tutar:150000,y:''}]}
-]};
+// Global değişkenler - Firebase callback'inden önce tanımlanmalı
+var S = JSON.parse(JSON.stringify(DEF));
+var curDetId = null;
+var dbRef = null;
  
 // Yükleniyor göstergesi
-document.getElementById('app').style.opacity = '0.5';
-document.getElementById('app').style.pointerEvents = 'none';
+document.getElementById('app').style.opacity='0.4';
+document.getElementById('app').style.pointerEvents='none';
  
-let S = JSON.parse(JSON.stringify(DEF));
-let fbReady = false;
+function sv(){ if(dbRef) dbRef.set(S); }
  
-// Firebase'den gerçek zamanlı veri dinle
-onValue(dbRef, (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    S = data;
-    // Diziye çevir (Firebase obje olarak saklıyor)
-    if (S.musteriler && !Array.isArray(S.musteriler)) {
-      S.musteriler = Object.values(S.musteriler);
-    }
-    if (!S.musteriler) S.musteriler = [];
-  } else {
-    // Firebase boşsa DEF verileri yükle
-    S = JSON.parse(JSON.stringify(DEF));
-    set(dbRef, S);
-  }
-  if (!fbReady) {
-    fbReady = true;
-    document.getElementById('app').style.opacity = '1';
-    document.getElementById('app').style.pointerEvents = '';
-  }
-  render();
-  // Detay paneli açıksa güncelle
-  if (curDetId !== null) openDetail(curDetId);
+// Firebase başlat
+firebase.initializeApp({
+  apiKey:"AIzaSyCx-uaVkif18MN-F8sCdhq8Xvz8u0uegUk",
+  authDomain:"my-first-project-7eb0a.firebaseapp.com",
+  databaseURL:"https://my-first-project-7eb0a-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"my-first-project-7eb0a",
+  storageBucket:"my-first-project-7eb0a.firebasestorage.app",
+  messagingSenderId:"453300268604",
+  appId:"1:453300268604:web:593863fd68cad315805d39"
 });
+dbRef = firebase.database().ref('dashboard');
  
-// Firebase'e kaydet
-window._sv = function() {
-  set(dbRef, S).catch(err => console.error('Firebase kayıt hatası:', err));
-};
-</script>
-<script>
-function sv(){ if(window._sv) window._sv(); }
-let curDetId = null;
-// curDetId yukarıda tanımlandı
+dbRef.on('value', snap => {
+  const data = snap.val();
+  if(data){
+    S = data;
+    if(S.musteriler && !Array.isArray(S.musteriler)) S.musteriler = Object.values(S.musteriler);
+    if(!S.musteriler) S.musteriler = [];
+  } else {
+    S = JSON.parse(JSON.stringify(DEF));
+    dbRef.set(S);
+  }
+  document.getElementById('app').style.opacity='1';
+  document.getElementById('app').style.pointerEvents='';
+  render();
+  if(curDetId !== null) openDetail(curDetId);
+});
 function toTL(v,p){return p==='TL'?v:p==='€'?v*S.kurlar.EUR:p==='$'?v*S.kurlar.USD:v}
 function fmt(n,p){return n||n===0?n.toLocaleString('tr-TR',{maximumFractionDigits:0})+(p?' '+p:''):'–'}
 function fmtTL(n){return n.toLocaleString('tr-TR',{maximumFractionDigits:0})+' ₺'}
@@ -553,6 +528,5 @@ function saveKur(){
   if(!e||!u)return;S.kurlar={EUR:e,USD:u};sv();render();closePanel('kur');
 }
  
-// İlk render Firebase onValue ile tetiklenir
+// render() Firebase tarafından tetikleniyor
 </script>
- 
