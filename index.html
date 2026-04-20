@@ -318,6 +318,7 @@ dbRef.on('value', snap => {
     S = data;
     if(S.musteriler && !Array.isArray(S.musteriler)) S.musteriler = Object.values(S.musteriler);
     if(!S.musteriler) S.musteriler = [];
+    S.musteriler.forEach(m => { if(!m.odemeler) m.odemeler = []; });
   } else {
     S = JSON.parse(JSON.stringify(DEF));
     dbRef.set(S);
@@ -331,7 +332,7 @@ function toTL(v,p){return p==='TL'?v:p==='€'?v*S.kurlar.EUR:p==='$'?v*S.kurlar
 function fmt(n,p){return n||n===0?n.toLocaleString('tr-TR',{maximumFractionDigits:0})+(p?' '+p:''):'–'}
 function fmtTL(n){return n.toLocaleString('tr-TR',{maximumFractionDigits:0})+' ₺'}
 function fmtP(v){return(v*100).toFixed(1)+'%'}
-function calc(m){const t=m.odemeler.reduce((s,o)=>s+(o.tutar||0),0);const k=m.bedel-t;const p=m.bedel>0?t/m.bedel:0;return{t,k,p,tlB:toTL(m.bedel,m.para),tlT:toTL(t,m.para),tlK:toTL(k,m.para)}}
+function calc(m){if(!m.odemeler)m.odemeler=[];const t=m.odemeler.reduce((s,o)=>s+(o.tutar||0),0);const k=m.bedel-t;const p=m.bedel>0?t/m.bedel:0;return{t,k,p,tlB:toTL(m.bedel,m.para),tlT:toTL(t,m.para),tlK:toTL(k,m.para)}}
 function dur(p){return p>=1?{txt:'Tamamlandı',cls:'bg',dot:'#10B981'}:p>=0.5?{txt:'Devam Ediyor',cls:'bb',dot:'#3B82F6'}:p>0?{txt:'Başladı',cls:'ba',dot:'#F59E0B'}:{txt:'Bekliyor',cls:'bk',dot:'#9CA3AF'}}
 function ini(s){return s.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
 const AV=[['#DBEAFE','#1E40AF'],['#D1FAE5','#065F46'],['#FEF3C7','#92400E'],['#EDE9FE','#4C1D95'],['#FCE7F3','#831843'],['#FFEDD5','#9A3412']];
