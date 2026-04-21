@@ -361,10 +361,15 @@ dbRef.on('value', snap => {
   const data = snap.val();
   if(data){
     S = data;
-    if(S.musteriler && !Array.isArray(S.musteriler)) S.musteriler = Object.values(S.musteriler);
+    // Firebase dizileri obje olarak saklıyor, tekrar diziye çevir
+    if(S.musteriler && !Array.isArray(S.musteriler)){
+      S.musteriler = Object.values(S.musteriler);
+    }
     if(!S.musteriler) S.musteriler = [];
+    // Her müşterinin odemeler dizisini garantile (Firebase boş diziyi siliyor)
     S.musteriler.forEach(m => { if(!m.odemeler) m.odemeler = []; });
   } else {
+    // Firebase tamamen boşsa DEF verisini yükle — SADECE bu durumda
     S = JSON.parse(JSON.stringify(DEF));
     dbRef.set(S);
   }
